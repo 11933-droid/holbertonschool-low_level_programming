@@ -13,17 +13,19 @@
 void *_calloc(unsigned int nmemb, unsigned int size)
 {
 	size_t total;
-	void *p;
+	unsigned char *p;
+	size_t i;
 
 	if (nmemb == 0 || size == 0)
 		return (NULL);
 
 	total = (size_t)nmemb * (size_t)size;
 
-	p = malloc(total);
+	p = (unsigned char *)malloc(total);
 	if (p == NULL)
 		return (NULL);
 
-	memset(p, 0, total);
-	return (p);
+	for (i = 0; i < total; i++)
+		p[i] = 0;
+	return ((void *)p);
 }
