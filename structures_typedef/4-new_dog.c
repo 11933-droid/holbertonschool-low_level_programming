@@ -1,59 +1,72 @@
 #include "dog.h"
 #include <stdlib.h>
-#include <string.h>
 
 /**
-	* new_dog - creates a new dog
-	* @name: name of the dog
-	* @age: age of the dog
-	* @owner: name of the owner
-	*
-	* Return: pointer to new dog, or NULL if fail
-	*/
+ * _strlen - compute length of a string
+ * @s: string
+ * Return: length (0 if s is NULL)
+ */
+static int _strlen(char *s)
+{
+	int n = 0;
+
+	if (!s)
+		return (0);
+	while (s[n])
+		n++;
+	return (n);
+}
+
+/**
+ * _strdup - duplicate a string using malloc
+ * @s: string to duplicate
+ * Return: pointer to new string, or NULL on failure (or if s is NULL)
+ */
+static char *_strdup(char *s)
+{
+	int i, len;
+	char *p;
+
+	if (!s)
+		return (NULL);
+	len = _strlen(s);
+	p = malloc(len + 1);
+	if (!p)
+		return (NULL);
+	for (i = 0; i < len; i++)
+		p[i] = s[i];
+	p[len] = '\0';
+	return (p);
+}
+
+/**
+ * new_dog - creates a new dog
+ * @name: dog's name (copied)
+ * @age: dog's age
+ * @owner: owner's name (copied)
+ * Return: pointer to new dog, or NULL if any allocation fails
+ */
 dog_t *new_dog(char *name, float age, char *owner)
 {
-	dog_t *d;
-	char *new_name, *new_owner;
+	dog_t *d = malloc(sizeof(*d));
 
-	d = malloc(sizeof(dog_t));
-	if (d == NULL)
-	return (NULL);
+	if (!d)
+		return (NULL);
 
-	/* copy name */
-	if (name != NULL)
-	{
-	new_name = malloc(strlen(name) + 1);
-	if (new_name == NULL)
-	{
-	    free(d);
-	    return (NULL);
-	}
-	strcpy(new_name, name);
-	}
-	else
-	{
-	new_name = NULL;
+	d->name = _strdup(name);
+	if (name && !d->name)
+	{	free(d);
+		return (NULL);
 	}
 
-	/* copy owner */
-	if (owner != NULL)
-	{
-	new_owner = malloc(strlen(owner) + 1);
-	if (new_owner == NULL)
-	{
-	    free(new_name);
-	    free(d);
-	    return (NULL);
-	}
-	strcpy(new_owner, owner);
-	}
-	else
-	{
-	new_owner = NULL;
+	d->owner = _strdup(owner);
+	if (owner && !d->owner)
+	{	free(d->name);
+		free(d);
+		return (NULL);
 	}
 
-	d->name = new_name;
 	d->age = age;
-	d->owner = new_owner;
 	return (d);
 }
+
