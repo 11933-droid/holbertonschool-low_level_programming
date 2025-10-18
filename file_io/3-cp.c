@@ -54,6 +54,13 @@ int main(int ac, char **av)
 	}
 
 	fd_to = open(av[2], O_WRONLY | O_CREAT | O_TRUNC, 0664);
+	w = write(fd_to, buf, r);
+		if (w == -1 || w != r)
+		{
+			close(fd_from);
+			close(fd_to);
+			print_error(99, NULL, av[2], 0);
+		}
 	if (fd_to == -1)
 	{
 		close(fd_from);
