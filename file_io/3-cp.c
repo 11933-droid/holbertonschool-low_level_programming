@@ -46,6 +46,12 @@ int main(int ac, char **av)
 	fd_from = open(av[1], O_RDONLY);
 	if (fd_from == -1)
 		print_error(98, NULL, av[1], 0);
+	r = read(fd_from, buf, BUF_SIZE);
+	if (r == -1)
+	{
+		close(fd_from);
+		print_error(98, NULL, av[1], 0);
+	}
 
 	fd_to = open(av[2], O_WRONLY | O_CREAT | O_TRUNC, 0664);
 	if (fd_to == -1)
